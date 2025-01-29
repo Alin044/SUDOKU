@@ -55,7 +55,7 @@ function generateTable(){
     }
 
     function isValid(x, y, num){
-        let column = generateColumn(y);
+        let column = createColumn(y);
 
         let rowValid = !completeTable[x].includes(num);
         let colValid = !column.includes(num);
@@ -74,6 +74,8 @@ function generateTable(){
 
     function fillTable(){
 
+        let emptyCells = [];
+
         for(let i = 0; i < 9; i++){
             for(let j = 0; j < 9; j++){
                 if(completeTable[i][j] === 0){
@@ -82,7 +84,7 @@ function generateTable(){
 
                     while(attempts < 9 && !valid){
                         let randNum = Math.floor(Math.random() * 9) + 1;
-                        if(isValid(i, j, num)){
+                        if(isValid(i, j, randNum)){
                             completeTable[i][j] = randNum;
                             valid = true;
                             if(fillTable()){
@@ -99,44 +101,13 @@ function generateTable(){
         return true;
     }
 
-    // function isValid(x, y, num){
-    //     let column = createColumn(y);
-    //     if( completeTable[x].includes(num) || column.includes(num)){
-    //         return false;
-    //     }else{
-    //         return true;
-    //     }
-    // }
+    fillTable();
+    displayTable();
+    function displayTable(){
+        console.log(completeTable);
+    }
 
-    // function fillTable(){
-
-    //     for(let i = 0; i < 9; i++){
-    //         for(let j = 0; j < 9; j++){
-    //             let valid = false;
-    //             let attemps = 0;
-    //             do{
-    //                 let randNum = Math.floor(Math.random() * 9) + 1;
-    //                 if(isValid(i, j, randNum)){
-    //                     completeTable[i][j] = randNum;
-    //                     valid = true;
-    //                 }
-    //                 attemps++;
-    //                 if(attemps > 100){
-    //                     console.log("Failed to generate random number ! ");
-    //                     return;
-    //                 }
-    //             }while(!valid);
-    //         }
-    //     }
-    // }
-
-    // fillTable();
-    // displayTable();
-    // function displayTable(){
-    //     console.log(completeTable);
-    // }
-
-    // return completeTable;
+    return completeTable;
 }
 
 generateTable();
