@@ -1,6 +1,8 @@
 const mainTableSudoku = document.querySelector('#mainTableSudoku');
 mainTableSudoku.style.borderCollapse = 'collapse';
 
+let completeTable = new Array(9).fill(null).map(() => Array(9).fill(0));    
+
 const levelGame = {
     level: ["easy", "medium", "hard", "expert"],
     levelCellsToRemove: [[32, 45], [46, 49], [50, 53], [53, 70]]
@@ -27,6 +29,7 @@ for(let i = 0; i < 9; i++){
 class allSudokuTables{
     constructor(mistakes, totalTime){
         this.completeTableSudoku = new Array(9).fill(null).map(() => new Array(9).fill(0));
+        this.gridToSolve = new Array(9).fill(null).map(() => new Array(9).fill(0));
         this.mistakes = mistakes;
         this.startTime = new Date(); 
         this.finalDate = null;
@@ -51,6 +54,7 @@ function addTableSudoku(tb){
 }
 
 function generateTable(){
+
     function createColumn(y) {
         return completeTable.map(row => row[y]);
     }
@@ -113,20 +117,40 @@ function generateTable(){
     return completeTable;
 }
 
-// function eliminateCells(levelType){
-//     let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
-//     let cellToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
-//     for(let i = 0; i < cellsToRemove; i++){
-//         do{
-//             let randomX = Math.floor(Math.random() * 9);
-//             let randomY = Math.floor(Math.random() * 9);
-//         }while();
-        
 
-//     }
-// }
 
 currentSudokuTable.setGrid(generateTable());
-currentSudokuTable.displayGrid();
+currentSudokuTable.gridToSolve = currentSudokuTable.completeTableSudoku;
 
-generateTable();
+
+function eliminateCells(levelType){
+    let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
+    let cellsToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
+    for(let i = 0; i < cellsToRemove; i++){
+        let attempts = 0;
+        do{
+            let randomX = Math.floor(Math.random() * 9);
+            let randomY = Math.floor(Math.random() * 9);
+            attempts++;
+            if(currentSudokuTable.gridToSolve[randomX][randomY] !== 0){
+                currentSudokuTable.gridToSolve[randomX][randomY] = 0;
+                attempts = 100;
+            }
+        }while(attempts < 100);
+    }
+    console.log(currentSudokuTable.gridToSolve);
+}
+
+eliminateCells(0);
+
+function displayGridToSolve(){
+    mainTableSudoku.style.color = "white";
+    mainTableSudoku.style.textAlign = "center";
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+            mainTableSudoku.rows[i].cells[j].textContent = (currentSudokuTable.gridToSolve[i][j] !== 0) ? currentSudokuTable.gridToSolve[i][j] : " ";
+        }
+    }
+}
+
+displayGridToSolve();
