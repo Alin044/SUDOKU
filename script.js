@@ -1,6 +1,10 @@
 const mainTableSudoku = document.querySelector('#mainTableSudoku');
 mainTableSudoku.style.borderCollapse = 'collapse';
 
+const levelGame = {
+    level: ["easy", "medium", "hard", "expert"],
+    levelCellsToRemove: [[32, 45], [46, 49], [50, 53], [53, 70]]
+};
 
 for(let i = 0; i < 9; i++){
     const newRow = document.createElement('tr');
@@ -22,92 +26,107 @@ for(let i = 0; i < 9; i++){
 
 class allSudokuTables{
     constructor(mistakes, totalTime){
-        this.completeTableSudoku = [];
+        this.completeTableSudoku = new Array(9).fill(null).map(() => new Array(9).fill(0));
         this.mistakes = mistakes;
         this.startTime = new Date(); 
         this.finalDate = null;
         this.totalTime = null;
     }
 
-    addTable(table){
-        if(Array.isArray(table) && table.every(row => Array.isArray(row))){
-            this.completeTableSudoku.push(table);
-        }else{
-            console.log("invalid Sudoku table format.");
-        }
+    setGrid(newGrid){
+        if(Array.isArray(newGrid) && newGrid.length === 9 && newGrid.every(row => Array.isArray(row) && row.length === 9)){
+            this.completeTableSudoku = newGrid;
+        }else console.log("Invalid grid format. It must be a 9x9 matrix");
+    }
+    displayGrid(){
+        console.log(this.completeTableSudoku);
     }
 };
 
-let sudokuTables = [];
+let currentSudokuTable = new allSudokuTables();
+
+
 function addTableSudoku(tb){
     sudokuTables.unshift(tb)
 }
 
 function generateTable(){
-    let completeTable = new Array(9).fill(null).map(() => new Array(9).fill(0));
-    
-    function createColumn(x){
-        let column = [];
-        for(let i = 0; i < 9; i++){
-            column.push(completeTable[i][x]);
-        }
-        return column;
+    function createColumn(y) {
+        return completeTable.map(row => row[y]);
     }
 
-    function isValid(x, y, num){
+    function isValid(x, y, num) {
         let column = createColumn(y);
-
         let rowValid = !completeTable[x].includes(num);
         let colValid = !column.includes(num);
-        let subGridValid = true; // 3 x 3 grid
+        let subGridValid = true;
 
         let startX = Math.floor(x / 3) * 3;
         let startY = Math.floor(y / 3) * 3;
 
-        for(let i = startX; i < startX + 3; i++){
-            for(let j = startY; j < startY + 3; j++){
-                if(completeTable[i][j] === num) subGridValid = false;
+        for (let i = startX; i < startX + 3; i++) {
+            for (let j = startY; j < startY + 3; j++) {
+                if (completeTable[i][j] === num) subGridValid = false;
             }
         }
+
         return rowValid && colValid && subGridValid;
     }
 
-    function fillTable(){
+    function fillTable(index) {
+        if (index === emptyCells.length) {
+            return true; // Base case: all cells filled
+        }
 
-        let emptyCells = [];
+        const { i, j } = emptyCells[index]; // Current cell to process
 
-        for(let i = 0; i < 9; i++){
-            for(let j = 0; j < 9; j++){
-                if(completeTable[i][j] === 0){
-                    let attempts = 0;
-                    let valid = false;
+        for (let num = 1; num <= 9; num++) {
+            if (isValid(i, j, num)) {
+                completeTable[i][j] = num; // Place the number
 
-                    while(attempts < 9 && !valid){
-                        let randNum = Math.floor(Math.random() * 9) + 1;
-                        if(isValid(i, j, randNum)){
-                            completeTable[i][j] = randNum;
-                            valid = true;
-                            if(fillTable()){
-                                return true;
-                            }
-                            completeTable[i][j] = 0;
-                        }
-                        attempts++;
-                    }
-                    return false;
+                if (fillTable(index + 1)) {
+                    return true; // Recursive call for the next cell
                 }
+
+                completeTable[i][j] = 0; // Backtrack
             }
         }
-        return true;
+
+        return false; // No valid number for this cell
     }
 
-    fillTable();
-    displayTable();
-    function displayTable(){
+    // Collect all empty cells
+    let emptyCells = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            emptyCells.push({ i, j });
+        }
+    }
+
+    fillTable(0);
+
+    function displayTable() {
         console.log(completeTable);
     }
 
+    displayTable();
     return completeTable;
 }
+
+// function eliminateCells(levelType){
+//     let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
+//     let cellToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
+//     for(let i = 0; i < cellsToRemove; i++){
+//         do{
+//             let randomX = Math.floor(Math.random() * 9);
+//             let randomY = Math.floor(Math.random() * 9);
+//         }while();
+        
+
+//     }
+// }
+
+currentSudokuTable.setGrid(generateTable());
+currentSudokuTable.displayGrid();
 
 generateTable();
