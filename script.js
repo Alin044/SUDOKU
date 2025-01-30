@@ -42,7 +42,11 @@ function hoverEffectCells() {
 }
 
 function handleCellClick(){
-    
+    sudokuCells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            cell.style.backgroundColor = "#ffffffa1";
+        })
+    })
 }
 hoverEffectCells();
 
