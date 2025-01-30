@@ -40,6 +40,10 @@ function hoverEffectCells() {
         });
     });
 }
+
+function handleCellClick(){
+    
+}
 hoverEffectCells();
 
 
