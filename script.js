@@ -53,69 +53,67 @@ function addTableSudoku(tb){
     sudokuTables.unshift(tb)
 }
 
-function generateTable(){
 
-    function createColumn(y) {
-        return completeTable.map(row => row[y]);
+function generateTable(){
+    let grid = new Array(9).fill(null).map( () => new Array(9).fill(0));
+
+    function shuffle(array){
+        for(let i = array.length - 1; i >= 0; i--){
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
 
     function isValid(x, y, num) {
-        let column = createColumn(y);
-        let rowValid = !completeTable[x].includes(num);
-        let colValid = !column.includes(num);
-        let subGridValid = true;
-
+        // Check row
+        for (let j = 0; j < 9; j++) {
+            if (grid[x][j] === num) return false;
+        }
+        // Check column
+        for (let i = 0; i < 9; i++) {
+            if (grid[i][y] === num) return false;
+        }
+        // Check 3x3 subgrid
         let startX = Math.floor(x / 3) * 3;
         let startY = Math.floor(y / 3) * 3;
-
         for (let i = startX; i < startX + 3; i++) {
             for (let j = startY; j < startY + 3; j++) {
-                if (completeTable[i][j] === num) subGridValid = false;
+                if (grid[i][j] === num) return false;
             }
         }
-
-        return rowValid && colValid && subGridValid;
+        return true;
     }
 
-    function fillTable(index) {
-        if (index === emptyCells.length) {
-            return true; // Base case: all cells filled
-        }
-
-        const { i, j } = emptyCells[index]; // Current cell to process
-
-        for (let num = 1; num <= 9; num++) {
-            if (isValid(i, j, num)) {
-                completeTable[i][j] = num; // Place the number
-
-                if (fillTable(index + 1)) {
-                    return true; // Recursive call for the next cell
+    function solve(){
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                if(grid[i][j] === 0){
+                    const numbers = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                    for(let num of numbers){
+                        if(isValid(i, j, num)){
+                            grid[i][j] = num;
+                            if(solve()){
+                                return true;
+                            }
+                            grid[i][j] = 0;
+                        }
+                    }
+                    return false;
                 }
-
-                completeTable[i][j] = 0; // Backtrack
             }
         }
-
-        return false; // No valid number for this cell
+        return true;
     }
 
-    // Collect all empty cells
-    let emptyCells = [];
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            emptyCells.push({ i, j });
-        }
-    }
 
-    fillTable(0);
+    solve();
 
-    function displayTable() {
-        console.log(completeTable);
-    }
-
-    displayTable();
-    return completeTable;
+    console.log(grid);
+    return grid;
 }
+
+generateTable();
 
 
 
@@ -154,3 +152,139 @@ function displayGridToSolve(){
 }
 
 displayGridToSolve();
+let solvedSudoku = new Array(9).fill(null).map( () => new Array(9).fill(0));
+solvedSudoku = currentSudokuTable.gridToSolve;
+
+function findNextEmptyCell(puzzle){
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+            if(puzzle[i][j] === 0)
+                return [i, j];
+        }
+    }
+    return [null, null];
+}
+
+function isValid(puzzle, guess, row, col){
+    let row_vals = puzzle[row];
+    if( row_vals.includes(guess))
+        return false;
+
+    let col_val = [];
+    for(let i = 0; i < 9; i++){
+        col_val.push(puzzle[i][col]);
+    }
+
+    if( col_val.includes(guess))
+        return false;
+
+    let startX = Math.floor(row / 3) * 3;
+    let startY = Math.floor(col / 3) * 3;
+
+    for(let i = startX; i < startX + 3; i++){
+        for(let j = startY; j < startY + 3; j++){
+            if(puzzle[i][j] === guess)
+                return false;
+        }
+    }
+    return true;
+}
+
+function solveSudoku(puzzle){
+    let [row, col] = findNextEmptyCell(puzzle); 
+    if(row === null)
+        return true;
+
+    for(let guess = 1; guess < 10; guess++){
+        if(isValid(puzzle, guess, row, col)){
+            puzzle[row][col] = guess;
+            if(solveSudoku(puzzle)){
+                return true;    
+            }
+        }
+        puzzle[row][col] = 0;
+
+    }
+    return false;
+}
+
+if(solveSudoku(solvedSudoku)){
+    console.log("Solved Sudoku : ");
+    console.log(solvedSudoku);
+}else{
+    console.log("No solution found");
+}
+
+    
+
+
+
+
+
+
+
+
+
+// function generateTable(){
+
+//     function createColumn(y) {
+//         return completeTable.map(row => row[y]);
+//     }
+
+//     function isValid(x, y, num) {
+//         let column = createColumn(y);
+//         let rowValid = !completeTable[x].includes(num);
+//         let colValid = !column.includes(num);
+//         let subGridValid = true;
+
+//         let startX = Math.floor(x / 3) * 3;
+//         let startY = Math.floor(y / 3) * 3;
+
+//         for (let i = startX; i < startX + 3; i++) {
+//             for (let j = startY; j < startY + 3; j++) {
+//                 if (completeTable[i][j] === num) subGridValid = false;
+//             }
+//         }
+
+//         return rowValid && colValid && subGridValid;
+//     }
+
+//     function fillTable(index) {
+//         if (index === emptyCells.length) {
+//             return true; // Base case: all cells filled
+//         }
+
+//         const { i, j } = emptyCells[index]; // Current cell to process
+
+//         for (let num = 1; num <= 9; num++) {
+//             if (isValid(i, j, num)) {
+//                 completeTable[i][j] = num; // Place the number
+
+//                 if (fillTable(index + 1)) {
+//                     return true; // Recursive call for the next cell
+//                 }
+
+//                 completeTable[i][j] = 0; // Backtrack
+//             }
+//         }
+
+//         return false; // No valid number for this cell
+//     }
+
+//     // Collect all empty cells
+//     let emptyCells = [];
+//     for (let i = 0; i < 9; i++) {
+//         for (let j = 0; j < 9; j++) {
+//             emptyCells.push({ i, j });
+//         }
+//     }
+
+//     fillTable(0);
+
+//     function displayTable() {
+//         console.log(completeTable);
+//     }
+
+//     displayTable();
+//     return completeTable;
+// }
