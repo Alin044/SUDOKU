@@ -39,9 +39,50 @@ body{
     justify-content: center;
     width: 100%;    
     height: 100%;
+    flex-direction: column;
 }
 
 #mainTableSudoku{
     border: 2px solid rgb(255, 255, 255);
+    margin-top: 100px;
 }
 
+#numPad{
+    display: flex;
+    flex-direction: row;
+    margin-top: 2.5%;
+}
+
+.btnNumpad{
+    width: 50px;
+    height: 50px;
+    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border-radius: 50%;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+#tools{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.btnTools{
+    width: 60px;
+    height: 60px;
+    border: 1px solid white;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 50%; 
+    margin-right: 5px;
+}
+
+.btnTools:hover, .btnNumpad:hover{
+    background-color: rgba(255, 255, 255, 0.295);
+}
+
+.btnTools:active, .btnNumpad:active{
+    background-color: rgba(255, 255, 255, 0.63);
+}
