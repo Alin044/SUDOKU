@@ -124,22 +124,49 @@ currentSudokuTable.gridToSolve = currentSudokuTable.completeTableSudoku;
 function eliminateCells(levelType){
     let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
     let cellsToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
-    for(let i = 0; i < cellsToRemove; i++){
-        let attempts = 0;
-        do{
-            let randomX = Math.floor(Math.random() * 9);
-            let randomY = Math.floor(Math.random() * 9);
-            attempts++;
-            if(currentSudokuTable.gridToSolve[randomX][randomY] !== 0){
-                currentSudokuTable.gridToSolve[randomX][randomY] = 0;
-                attempts = 100;
-            }
-        }while(attempts < 100);
+
+    let nonZeroCells = [];
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+                if(currentSudokuTable.gridToSolve[i][j] !== 0){
+                    nonZeroCells.push([i, j]);
+                }
+        }
     }
+
+
+    for(let i = nonZeroCells.length -1 ; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [nonZeroCells[i], nonZeroCells[j]] = [nonZeroCells[j], nonZeroCells[i]];
+    }
+
+    for(let i = 0; i < cellsToRemove && i < nonZeroCells.length; i++){
+        let [x, y] = nonZeroCells[i];
+        currentSudokuTable.gridToSolve[x][y] = 0;
+    }
+
     console.log(currentSudokuTable.gridToSolve);
 }
 
-eliminateCells(0);
+// function eliminateCells(levelType){
+//     let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
+//     let cellsToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
+//     for(let i = 0; i < cellsToRemove; i++){
+//         let attempts = 0;
+//         do{
+//             let randomX = Math.floor(Math.random() * 9);
+//             let randomY = Math.floor(Math.random() * 9);
+//             attempts++;
+//             if(currentSudokuTable.gridToSolve[randomX][randomY] !== 0){
+//                 currentSudokuTable.gridToSolve[randomX][randomY] = 0;
+//                 attempts = 100;
+//             }
+//         }while(attempts < 100);
+//     }
+//     console.log(currentSudokuTable.gridToSolve);
+// }
+
+eliminateCells(0);  
 
 function displayGridToSolve(){
     mainTableSudoku.style.color = "white";
@@ -154,6 +181,8 @@ function displayGridToSolve(){
 displayGridToSolve();
 let solvedSudoku = new Array(9).fill(null).map( () => new Array(9).fill(0));
 solvedSudoku = currentSudokuTable.gridToSolve;
+
+let allSolutions = [];
 
 function findNextEmptyCell(puzzle){
     for(let i = 0; i < 9; i++){
@@ -191,29 +220,51 @@ function isValid(puzzle, guess, row, col){
 }
 
 function solveSudoku(puzzle){
-    let [row, col] = findNextEmptyCell(puzzle); 
-    if(row === null)
-        return true;
-
+    let [row, col] = findNextEmptyCell(puzzle);
+    if(row === null){
+        allSolutions.push(puzzle.map(row => [...row]));
+        return;
+    }
     for(let guess = 1; guess < 10; guess++){
         if(isValid(puzzle, guess, row, col)){
             puzzle[row][col] = guess;
-            if(solveSudoku(puzzle)){
-                return true;    
-            }
+            solveSudoku(puzzle);
+            puzzle[row][col] = 0;
         }
-        puzzle[row][col] = 0;
-
     }
-    return false;
 }
 
-if(solveSudoku(solvedSudoku)){
-    console.log("Solved Sudoku : ");
-    console.log(solvedSudoku);
-}else{
-    console.log("No solution found");
-}
+solveSudoku(solvedSudoku);
+
+console.log("Number of solutions found : ", allSolutions.length);
+console.log("All Solutions : ", allSolutions);
+
+
+
+// function solveSudoku(puzzle){
+//     let [row, col] = findNextEmptyCell(puzzle); 
+//     if(row === null)
+//         return true;
+
+//     for(let guess = 1; guess < 10; guess++){
+//         if(isValid(puzzle, guess, row, col)){
+//             puzzle[row][col] = guess;
+//             if(solveSudoku(puzzle)){
+//                 return true;    
+//             }
+//         }
+//         puzzle[row][col] = 0;
+
+//     }
+//     return false;
+// }
+
+// if(solveSudoku(solvedSudoku)){
+//     console.log("Solved Sudoku : ");
+//     console.log(solvedSudoku);
+// }else{
+//     console.log("No solution found");
+// }
 
     
 
