@@ -16,6 +16,7 @@ for(let i = 0; i < 9; i++){
         newCell.style.border = '1px solid#696969';
         newCell.style.height = '60px';
         newCell.style.width = '60px';
+        newCell.classList.add("sudoku-cell");
         if( (j+1) % 3 === 0){
             newCell.style.borderRight = '2px solid white';
         }
@@ -25,6 +26,23 @@ for(let i = 0; i < 9; i++){
         newRow.style.borderBottom = '2px solid white';
     }
 }
+
+const sudokuCells = document.querySelectorAll(".sudoku-cell"); // Use querySelectorAll to select all cells
+
+function hoverEffectCells() {
+    sudokuCells.forEach(cell => {
+        cell.addEventListener('mouseenter', () => {
+            cell.style.backgroundColor = "#ffffff4b"; // Semi-transparent white
+        });
+
+        cell.addEventListener('mouseleave', () => {
+            cell.style.backgroundColor = "#ffffff00"; // Fully transparent
+        });
+    });
+}
+hoverEffectCells();
+
+
 
 class allSudokuTables{
     constructor(mistakes, totalTime){
@@ -48,10 +66,6 @@ class allSudokuTables{
 
 let currentSudokuTable = new allSudokuTables();
 
-
-function addTableSudoku(tb){
-    sudokuTables.unshift(tb)
-}
 
 
 function generateTable(){
