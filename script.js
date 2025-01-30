@@ -45,10 +45,14 @@ function handleCellClick(){
     sudokuCells.forEach(cell => {
         cell.addEventListener('click', () => {
             cell.style.backgroundColor = "#ffffffa1";
-        })
-    })
+        });
+        cell.addEventListener('mouseup', () => {
+            cell.style.backgroundColor = "#ffffff00";
+        });
+    });
 }
 hoverEffectCells();
+handleCellClick();
 
 
 
