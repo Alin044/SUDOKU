@@ -3,6 +3,8 @@ mainTableSudoku.style.borderCollapse = 'collapse';
 const timerBox = document.querySelector('#timerCounter'); 
 const numPad = document.querySelector('#numPad');
 const numPadBtn = numPad.querySelectorAll('button');
+const numPadArray = Array.from(numPadBtn);
+let index = 0;
 
 let completeTable = new Array(9).fill(null).map(() => Array(9).fill(0));    
 
@@ -68,6 +70,8 @@ class allSudokuTables{
         this.finalDate = null;
         this.totalTime = null;
         this.inProcessSudokuGrid = new Array(9).fill(null).map(() => new Array(9).fill(0));
+        this.solutionsLeft = [];
+        this.allSolutions = [];
     }
 
     setGrid(newGrid){
@@ -82,11 +86,6 @@ class allSudokuTables{
 
 let currentSudokuTable = new allSudokuTables();
 
-//this function will accept inputs from the button and will place the inputs in the chosen cell
-function sudokuCompletion(){
-
-
-}
 
 
 function generateTable(){
@@ -147,9 +146,6 @@ function generateTable(){
     console.log(grid);
     return grid;
 }
-
-generateTable();
-
 
 
 currentSudokuTable.setGrid(generateTable());
@@ -217,7 +213,7 @@ displayGridToSolve();
 let solvedSudoku = new Array(9).fill(null).map( () => new Array(9).fill(0));
 solvedSudoku = currentSudokuTable.gridToSolve;
 
-let allSolutions = [];
+
 
 function findNextEmptyCell(puzzle){
     for(let i = 0; i < 9; i++){
@@ -257,7 +253,7 @@ function isValid(puzzle, guess, row, col){
 function solveSudoku(puzzle){
     let [row, col] = findNextEmptyCell(puzzle);
     if(row === null){
-        allSolutions.push(puzzle.map(row => [...row]));
+        currentSudokuTable.allSolutions.push(puzzle.map(row => [...row]));
         return;
     }
     for(let guess = 1; guess < 10; guess++){
@@ -270,9 +266,48 @@ function solveSudoku(puzzle){
 }
 
 solveSudoku(solvedSudoku);
+currentSudokuTable.solutionsLeft = currentSudokuTable.allSolutions;
 
-console.log("Number of solutions found : ", allSolutions.length);
-console.log("All Solutions : ", allSolutions);
+
+console.log("Number of solutions found : ", currentSudokuTable.allSolutions.length);
+console.log("All Solutions : ", currentSudokuTable.allSolutions);
+
+//this function will accept inputs from the button and will place the inputs in the chosen cell
+console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length);
+function sudokuCompletion(){
+    let tempSolution;
+    let cellIndex = getCellPressed();
+    function validateNumber(i){
+        let num = i + 1;
+        for(let i = 0; i < currentSudokuTable.solutionsLeft.length; i++){
+            if(num === currentSudokuTable.solutionsLeft[i][cellIndex[0]][cellIndex[1]]){
+                tempSolution.push([i]);
+            }
+        }
+        
+        if(tempSolution.length > 0){
+            currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
+            return true;
+        }
+        
+    }
+    for(let i = 0; i < 9; i++){
+        numPadArray[i].addEventListener("click", validateNumber());
+    }
+
+}
+
+function getCellPressed(){
+    mainTableSudoku.addEventListener("click", function(event){
+        if(event.target.tagName === 'TD'){
+            const rowIndex = event.target.parrentElement.rowIndex;
+            const colIndex = event.target.cellIndex;
+            return [rowIndex, colIndex];
+        }
+    });
+}
+
+
 
 
 
