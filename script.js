@@ -1,5 +1,8 @@
 const mainTableSudoku = document.querySelector('#mainTableSudoku');
 mainTableSudoku.style.borderCollapse = 'collapse';
+const timerBox = document.querySelector('#timerCounter'); 
+const numPad = document.querySelector('#numPad');
+const numPadBtn = numPad.querySelectorAll('button');
 
 let completeTable = new Array(9).fill(null).map(() => Array(9).fill(0));    
 
@@ -64,6 +67,7 @@ class allSudokuTables{
         this.startTime = new Date(); 
         this.finalDate = null;
         this.totalTime = null;
+        this.inProcessSudokuGrid = new Array(9).fill(null).map(() => new Array(9).fill(0));
     }
 
     setGrid(newGrid){
@@ -78,6 +82,11 @@ class allSudokuTables{
 
 let currentSudokuTable = new allSudokuTables();
 
+//this function will accept inputs from the button and will place the inputs in the chosen cell
+function sudokuCompletion(){
+
+
+}
 
 
 function generateTable(){
@@ -264,6 +273,7 @@ solveSudoku(solvedSudoku);
 
 console.log("Number of solutions found : ", allSolutions.length);
 console.log("All Solutions : ", allSolutions);
+
 
 
 
