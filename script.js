@@ -1,12 +1,17 @@
 const mainTableSudoku = document.querySelector('#mainTableSudoku');
 mainTableSudoku.style.borderCollapse = 'collapse';
+const newGameOptions = document.querySelector('#newGameOptions');
+const newGameContainer = document.querySelector('#newGameContainer');
 const timerBox = document.querySelector('#timerCounter'); 
 const numPad = document.querySelector('#numPad');
 const numPadBtn = numPad.querySelectorAll('button');
 const numPadArray = Array.from(numPadBtn);
 let index = 0;
+let currentCell = [10, 10];
 
 let completeTable = new Array(9).fill(null).map(() => Array(9).fill(0));    
+
+newGameOptions.style.visibility = 'hidden';
 
 const levelGame = {
     level: ["easy", "medium", "hard", "expert"],
@@ -37,11 +42,15 @@ const sudokuCells = document.querySelectorAll(".sudoku-cell"); // Use querySelec
 function hoverEffectCells() {
     sudokuCells.forEach(cell => {
         cell.addEventListener('mouseenter', () => {
-            cell.style.backgroundColor = "#ffffff4b"; // Semi-transparent white
+            if( cell.parentElement.rowIndex !== currentCell[0] &&  cell.cellIndex !== currentCell[1]){
+                cell.style.backgroundColor = "#ffffff4b"; // Semi-transparent white
+            }
         });
 
         cell.addEventListener('mouseleave', () => {
-            cell.style.backgroundColor = "#ffffff00"; // Fully transparent
+            if( cell.parentElement.rowIndex !== currentCell[0] &&  cell.cellIndex !== currentCell[1]){
+                cell.style.backgroundColor = "#ffffff00"; // Fully transparent    
+            }
         });
     });
 }
@@ -56,8 +65,26 @@ function handleCellClick(){
         });
     });
 }
+function handleNewGameContainer(){
+    newGameContainer.addEventListener("mouseenter", () => {
+        newGameOptions.style.opacity = "1";
+        newGameOptions.style.visibility = "visible";
+        newGameOptions.style.transform = "translateY(0)";
+        newGameOptions.style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out, visibility 0s";
+    });
+
+    newGameContainer.addEventListener("mouseleave", () => {
+        newGameOptions.addEventListener("mouseleave", () => {
+            newGameOptions.style.opacity = "0";
+            newGameOptions.style.transform = "translateY(100%)";
+            newGameOptions.style.transition = "transform 0.5s ease-in, opacity 0.5s ease-in, visibility 0s linear 0.5s";
+        });
+        
+    });
+}
 hoverEffectCells();
 handleCellClick();
+handleNewGameContainer();
 
 
 
@@ -274,9 +301,11 @@ console.log("All Solutions : ", currentSudokuTable.allSolutions);
 
 //this function will accept inputs from the button and will place the inputs in the chosen cell
 console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length);
-function sudokuCompletion(){
+function sudokuCompletion(currentCell){
     let tempSolution;
-    let cellIndex = getCellPressed();
+    let cellIndex;
+    getCellPressed();
+    cellIndex = currentCell;
     function validateNumber(i){
         let num = i + 1;
         for(let i = 0; i < currentSudokuTable.solutionsLeft.length; i++){
@@ -284,15 +313,18 @@ function sudokuCompletion(){
                 tempSolution.push([i]);
             }
         }
-        
         if(tempSolution.length > 0){
             currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
             return true;
         }
-        
     }
     for(let i = 0; i < 9; i++){
-        numPadArray[i].addEventListener("click", validateNumber());
+        numPadArray[i].addEventListener("click", function(){
+            if(validateNumber(i)){
+
+            }
+        });
+    
     }
 
 }
@@ -300,12 +332,23 @@ function sudokuCompletion(){
 function getCellPressed(){
     mainTableSudoku.addEventListener("click", function(event){
         if(event.target.tagName === 'TD'){
-            const rowIndex = event.target.parrentElement.rowIndex;
+            const rowIndex = event.target.parentElement.rowIndex;
             const colIndex = event.target.cellIndex;
-            return [rowIndex, colIndex];
+            currentCell = [rowIndex, colIndex];
+            for(let i = 0; i < 9; i++){
+                for(let j = 0; j < 9; j++){
+                    mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
+                }
+            }
+            for(let i = 0; i < 9; i++){
+                mainTableSudoku.rows[i].cells[colIndex].style.backgroundColor = "#ffffff65";            
+                mainTableSudoku.rows[rowIndex].cells[i].style.backgroundColor = "#ffffff65";
+            }
+            mainTableSudoku.rows[rowIndex].cells[colIndex].style.backgroundColor = "#93e0ffa9";
         }
     });
 }
+getCellPressed();
 
 
 

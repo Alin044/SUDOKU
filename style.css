@@ -163,6 +163,12 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out, visibility 0s linear 0.5s;
 }
 
 #newGameOptionsBox{
@@ -170,5 +176,27 @@ body{
     height: 155px;
     background-color: rgb(127, 127, 255);
     border-radius: 30px;
+    border: 1px solid #ffffff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.optionBtn{
+    width: 100px;
+    margin: 20px;
+    height: 60px;
+    border-radius: 30px;
     border: 1px solid white;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: white;
+    box-shadow: 2px 6px 55px -12px rgba(0,0,0,0.75);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.optionBtn:hover{
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.733);
 }
