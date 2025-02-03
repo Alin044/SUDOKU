@@ -306,44 +306,75 @@ console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length
 
 
 //-----------------------------Needs a lot of work----------------------------------------------
-function sudokuCompletion(){
-    let cellIndex;
-    getCellPressed();
-    cellIndex = currentCell;
+// function sudokuCompletion(){
+//     let cellIndex;
+//     getCellPressed();
+//     cellIndex = currentCell;
 
-    function validateNumber(i){
-        let tempSolution = [];
-        let num = i + 1;
-        for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
-            if(num === currentSudokuTable.solutionsLeft[j][cellIndex[0]][cellIndex[1]]){
-                tempSolution.push(j);
+//     function validateNumber(i){
+//         let tempSolution = [];
+//         let num = i + 1;
+//         for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
+//             if(num === currentSudokuTable.solutionsLeft[j][cellIndex[0]][cellIndex[1]]){
+//                 tempSolution.push(j);
+//             }
+//         }
+//         if(tempSolution.length > 0){
+//             currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
+//             return true;
+//         }
+//         return false;
+//     }
+    
+//     function handleClickBtn(event){
+//         let i = numPadArray.indexOf(event.target);
+//         if(validateNumber(i)){
+//             currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]] = i + 1;
+//             mainTableSudoku.rows[cellIndex[0]].cells[cellIndex[1]].textContent = currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]];
+//         }else{
+        
+//         }
+//     }
+
+//     if(currentSudokuTable.gridToSolve[cellIndex[0]][cellIndex[1]] === 0){
+//         for(let i = 0; i < 9; i++){
+//             numPadArray[i].removeEventListener("click", handleClickBtn);
+//             numPadArray[i].addEventListener("click", handleClickBtn);
+//         }
+//     }
+// }
+//-------------------------------------------------------------------------------------------------------------
+
+
+//===================Recreation of sudokuCompletion funciton==============================
+
+function sudokuCompletion(){
+    getCellPressed();
+    let numberClicked = 10;
+    let indX = currentCell[0];
+    let indY = currentCell[1];
+
+    function getButtonClicked(){
+        for(let i = 0; i < 9; i++){
+            numPadArray[i].onclick = function(){
+                numberClicked = i;
             }
         }
-        if(tempSolution.length > 0){
-            currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
-            return true;
-        }
-        return false;
-    }
-    
-    function handleClickBtn(event){
-        let i = numPadArray.indexOf(event.target);
-        if(validateNumber(i)){
-            currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]] = i + 1;
-            mainTableSudoku.rows[cellIndex[0]].cells[cellIndex[1]].textContent = currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]];
-        }else{
-        
-        }
     }
 
-    if(currentSudokuTable.gridToSolve[cellIndex[0]][cellIndex[1]] === 0){
-        for(let i = 0; i < 9; i++){
-            numPadArray[i].removeEventListener("click", handleClickBtn);
-            numPadArray[i].addEventListener("click", handleClickBtn);
-        }
+    getButtonClicked();
+    console.log("Button clicked : " + numberClicked );
+
+
+
+
+    if(currentSudokuTable.gridToSolve[indX][indY] === 0){
+
     }
 }
-//-------------------------------------------------------------------------------------------------------------
+sudokuCompletion();
+
+//========================================================================================
 
 
 
@@ -386,7 +417,6 @@ function getCellPressed(){
         }
     });
 }
-getCellPressed();
 
 
 
