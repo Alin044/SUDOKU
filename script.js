@@ -94,7 +94,7 @@ class allSudokuTables{
         this.gridToSolve = new Array(9).fill(null).map(() => new Array(9).fill(0));
         this.mistakes = mistakes;
         this.startTime = new Date(); 
-        this.finalDate = null;
+        this.finalTime = null;
         this.totalTime = null;
         this.inProcessSudokuGrid = new Array(9).fill(null).map(() => new Array(9).fill(0));
         this.solutionsLeft = [];
@@ -301,34 +301,64 @@ console.log("All Solutions : ", currentSudokuTable.allSolutions);
 
 //this function will accept inputs from the button and will place the inputs in the chosen cell
 console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length);
-function sudokuCompletion(currentCell){
-    let tempSolution;
+function sudokuCompletion(){
     let cellIndex;
     getCellPressed();
     cellIndex = currentCell;
+
     function validateNumber(i){
+        let tempSolution = [];
         let num = i + 1;
-        for(let i = 0; i < currentSudokuTable.solutionsLeft.length; i++){
-            if(num === currentSudokuTable.solutionsLeft[i][cellIndex[0]][cellIndex[1]]){
-                tempSolution.push([i]);
+        for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
+            if(num === currentSudokuTable.solutionsLeft[j][cellIndex[0]][cellIndex[1]]){
+                tempSolution.push(j);
             }
         }
         if(tempSolution.length > 0){
             currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
             return true;
         }
+        return false;
     }
-    for(let i = 0; i < 9; i++){
-        numPadArray[i].addEventListener("click", function(){
-            if(validateNumber(i)){
-
-            }
-        });
     
+    function handleClickBtn(event){
+        let i = numPadArray.indexOf(event.target);
+        if(validateNumber(i)){
+            currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]] = i + 1;
+            mainTableSudoku.rows[cellIndex[0]].cells[cellIndex[1]].textContent = currentSudokuTable.inProcessSudokuGrid[cellIndex[0]][cellIndex[1]];
+        }else{
+        
+        }
     }
 
+    if(currentSudokuTable.gridToSolve[cellIndex[0]][cellIndex[1]] === 0){
+        for(let i = 0; i < 9; i++){
+            numPadArray[i].removeEventListener("click", handleClickBtn);
+            numPadArray[i].addEventListener("click", handleClickBtn);
+        }
+    }
+}
+sudokuCompletion();
+
+function cronometer(){
+    currentSudokuTable.startTime = 0;
+    let intervalId = setInterval(() => {
+        currentSudokuTable.startTime++;
+        let tempMin = Math.floor(currentSudokuTable.startTime / 60);
+        let tempSec = currentSudokuTable.startTime % 60;
+        if(tempMin < 10 && tempSec < 10){
+            timerBox.textContent = `0${tempMin}:0${tempSec}`;
+        }else if(tempMin > 10 && tempSec > 10){
+            timerBox.textContent = `${tempMin}:${tempSec}`;
+        }else if(tempMin > 10 && tempSec < 10){
+            timerBox.textContent = `${tempMin}:0${tempSec}`;
+        }else if(tempMin < 10 && tempSec > 10){
+            timerBox.textContent = `0${tempMin}:${tempSec}`;
+        }
+    }, 1000);
 }
 
+cronometer();
 function getCellPressed(){
     mainTableSudoku.addEventListener("click", function(event){
         if(event.target.tagName === 'TD'){
@@ -349,7 +379,6 @@ function getCellPressed(){
     });
 }
 getCellPressed();
-
 
 
 
