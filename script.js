@@ -301,6 +301,11 @@ console.log("All Solutions : ", currentSudokuTable.allSolutions);
 
 //this function will accept inputs from the button and will place the inputs in the chosen cell
 console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length);
+
+
+
+
+//-----------------------------Needs a lot of work----------------------------------------------
 function sudokuCompletion(){
     let cellIndex;
     getCellPressed();
@@ -338,7 +343,10 @@ function sudokuCompletion(){
         }
     }
 }
-sudokuCompletion();
+//-------------------------------------------------------------------------------------------------------------
+
+
+
 
 function cronometer(){
     currentSudokuTable.startTime = 0;
