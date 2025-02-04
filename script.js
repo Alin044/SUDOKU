@@ -73,17 +73,23 @@ function handleNewGameContainer(){
         newGameOptions.style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out, visibility 0s";
     });
 
-    newGameContainer.addEventListener("mouseleave", () => {
+    //newGameContainer.addEventListener("mouseleave", () => {
         newGameOptions.addEventListener("mouseleave", () => {
             newGameOptions.style.opacity = "0";
             newGameOptions.style.transform = "translateY(100%)";
             newGameOptions.style.transition = "transform 0.5s ease-in, opacity 0.5s ease-in, visibility 0s linear 0.5s";
         });
         
-    });
+    //});
 }
-hoverEffectCells();
-handleCellClick();
+
+document.addEventListener("DOMContentLoaded", () =>{
+    hoverEffectCells();
+    handleCellClick();
+});
+
+
+
 handleNewGameContainer();
 
 
@@ -226,6 +232,8 @@ function eliminateCells(levelType){
 
 eliminateCells(0);  
 
+
+
 function displayGridToSolve(){
     mainTableSudoku.style.color = "white";
     mainTableSudoku.style.textAlign = "center";
@@ -237,6 +245,8 @@ function displayGridToSolve(){
 }
 
 displayGridToSolve();
+getCellPressed();
+
 let solvedSudoku = new Array(9).fill(null).map( () => new Array(9).fill(0));
 solvedSudoku = currentSudokuTable.gridToSolve;
 
@@ -348,52 +358,98 @@ console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length
 
 //===================Recreation of sudokuCompletion funciton==============================
 
-function sudokuCompletion(){
-    getCellPressed();
-    let numberClicked = -1;
+function sudokuCompletion(event) {
     let indX = currentCell[0];
     let indY = currentCell[1];
 
-    function getButtonClicked(){
-        for(let i = 0; i < 9; i++){
-            numPadArray[i].onclick = function(){
-                numberClicked = i;
-                console.log("Button clicked : " + numberClicked );
-            }
-        }
-    }
+    if (indX < 9 && indY < 9) {
+        let numberClicked = numPadArray.indexOf(event.target);
+        console.log("Button clicked:", numberClicked + 1);
 
-    function validateNumber(){
-        let tempSolution = [];
-        let num = numberClicked + 1;
-        for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
-            if(num === currentSudokuTable.solutionsLeft[j][indX][indY]){
-                tempSolution.push(j);
-            }
-        }
-        if(tempSolution.length > 0){
-            currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
-            return true;
-        }
-        return false;
-    }
-    console.log("indX: " + indX + " indY: " + indY);
-    if(indX !== 10 && indY !== 10){
-        getButtonClicked();
-        if(numberClicked >= 0 && numberClicked <= 9){
-            if(currentSudokuTable.gridToSolve[indX][indY] === 0){
-                if(validateNumber()){
-                    currentSudokuTable.inProcessSudokuGrid[indX][indY] = numberClicked + 1;
-                    mainTableSudoku.rows[indX].cells[indY].textContent = currentSudokuTable.inProcessSudokuGrid[indX][indY];
-                }
+        if (currentSudokuTable.gridToSolve[indX][indY] === 0) {
+            if (validateNumber(numberClicked)) {
+                currentSudokuTable.inProcessSudokuGrid[indX][indY] = numberClicked + 1;
+                mainTableSudoku.rows[indX].cells[indY].textContent = numberClicked + 1;
+                console.log("Number entered successfully");
+            } else {
+                console.log("Invalid move!");
             }
         }
     }
-    // adauga un if sa vad daca indX si indY sunt mai mici de 10    
 }
-sudokuCompletion();
 
-//========================================================================================
+function validateNumber(numberClicked) {
+    let tempSolution = [];
+    let num = numberClicked + 1;
+    let [indX, indY] = currentCell;
+
+    for (let j = 0; j < currentSudokuTable.solutionsLeft.length; j++) {
+        if (num === currentSudokuTable.solutionsLeft[j][indX][indY]) {
+            tempSolution.push(j);
+        }
+    }
+    
+    if (tempSolution.length > 0) {
+        currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((_, index) => tempSolution.includes(index));
+        return true;
+    }
+    return false;
+}
+
+numPadArray.forEach(button => {
+    button.addEventListener("click", sudokuCompletion);
+});
+
+// function sudokuCompletion(){
+//     getCellPressed();
+//     let numberClicked = -1;
+//     let indX = currentCell[0];
+//     let indY = currentCell[1];
+
+    
+//     function getButtonClicked(){
+//         for(let i = 0; i < 9; i++){
+//             numPadArray[i].onclick = function(){
+//                 numberClicked = i;
+//                 console.log("Button clicked : " + numberClicked );
+
+//                 if(indX < 9 && indY < 9){
+//                     if(currentSudokuTable.gridToSolve[indX][indY] === 0){
+//                         if(validateNumber()){
+//                             currentSudokuTable.inProcessSudokuGrid[indX][indY] = numberClicked + 1;
+//                             mainTableSudoku.rows[indX].cells[indY].textContent = currentSudokuTable.inProcessSudokuGrid[indX][indY];
+//                             console.log("Number entered successfully");
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     function validateNumber(){
+//         let tempSolution = [];
+//         let num = numberClicked + 1;
+//         for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
+//             if(num === currentSudokuTable.solutionsLeft[j][indX][indY]){
+//                 tempSolution.push(j);
+//             }
+//         }
+//         if(tempSolution.length > 0){
+//             currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
+//             return true;
+//         }
+//         return false;
+//     }
+//     console.log("indX: " + indX + " indY: " + indY);
+//     if(indX < 9 && indY < 9){
+//         console.log("indX: " + indX + " indY: " + indY);
+//         getButtonClicked();
+//     }
+//     // adauga un if sa vad daca indX si indY sunt mai mici de 10    
+// }
+
+
+// //========================================================================================
 
 
 
@@ -417,25 +473,45 @@ function cronometer(){
 }
 
 cronometer();
-function getCellPressed(){
-    mainTableSudoku.addEventListener("click", function(event){
-        if(event.target.tagName === 'TD'){
-            const rowIndex = event.target.parentElement.rowIndex;
-            const colIndex = event.target.cellIndex;
-            currentCell = [rowIndex, colIndex];
+
+function getCellPressed() {
+    mainTableSudoku.addEventListener("click", function(event) {
+        if (event.target.tagName === 'TD') {
+            currentCell = [event.target.parentElement.rowIndex, event.target.cellIndex];
+            console.log("Selected cell:", currentCell);
             for(let i = 0; i < 9; i++){
                 for(let j = 0; j < 9; j++){
                     mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
                 }
             }
             for(let i = 0; i < 9; i++){
-                mainTableSudoku.rows[i].cells[colIndex].style.backgroundColor = "#ffffff65";            
-                mainTableSudoku.rows[rowIndex].cells[i].style.backgroundColor = "#ffffff65";
+                mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff65";            
+                mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff65";
             }
-            mainTableSudoku.rows[rowIndex].cells[colIndex].style.backgroundColor = "#93e0ffa9";
+            mainTableSudoku.rows[currentCell[0]].cells[currentCell[1]].style.backgroundColor = "#93e0ffa9";
         }
     });
 }
+
+// function getCellPressed(){
+//     mainTableSudoku.addEventListener("click", function(event){
+//         if(event.target.tagName === 'TD'){
+//             const rowIndex = event.target.parentElement.rowIndex;
+//             const colIndex = event.target.cellIndex;
+//             currentCell = [rowIndex, colIndex];
+//             for(let i = 0; i < 9; i++){
+//                 for(let j = 0; j < 9; j++){
+//                     mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
+//                 }
+//             }
+//             for(let i = 0; i < 9; i++){
+//                 mainTableSudoku.rows[i].cells[colIndex].style.backgroundColor = "#ffffff65";            
+//                 mainTableSudoku.rows[rowIndex].cells[i].style.backgroundColor = "#ffffff65";
+//             }
+//             mainTableSudoku.rows[rowIndex].cells[colIndex].style.backgroundColor = "#93e0ffa9";
+//         }
+//     });
+// }
 
 
 
