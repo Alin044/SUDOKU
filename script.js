@@ -350,7 +350,7 @@ console.log("Current solutions left: " + currentSudokuTable.solutionsLeft.length
 
 function sudokuCompletion(){
     getCellPressed();
-    let numberClicked = 10;
+    let numberClicked = -1;
     let indX = currentCell[0];
     let indY = currentCell[1];
 
@@ -358,19 +358,38 @@ function sudokuCompletion(){
         for(let i = 0; i < 9; i++){
             numPadArray[i].onclick = function(){
                 numberClicked = i;
+                console.log("Button clicked : " + numberClicked );
             }
         }
     }
 
-    getButtonClicked();
-    console.log("Button clicked : " + numberClicked );
-
-
-
-
-    if(currentSudokuTable.gridToSolve[indX][indY] === 0){
-
+    function validateNumber(){
+        let tempSolution = [];
+        let num = numberClicked + 1;
+        for(let j = 0; j < currentSudokuTable.solutionsLeft.length; j++){
+            if(num === currentSudokuTable.solutionsLeft[j][indX][indY]){
+                tempSolution.push(j);
+            }
+        }
+        if(tempSolution.length > 0){
+            currentSudokuTable.solutionsLeft = currentSudokuTable.solutionsLeft.filter((element, index) => tempSolution.includes(index));
+            return true;
+        }
+        return false;
     }
+    console.log("indX: " + indX + " indY: " + indY);
+    if(indX !== 10 && indY !== 10){
+        getButtonClicked();
+        if(numberClicked >= 0 && numberClicked <= 9){
+            if(currentSudokuTable.gridToSolve[indX][indY] === 0){
+                if(validateNumber()){
+                    currentSudokuTable.inProcessSudokuGrid[indX][indY] = numberClicked + 1;
+                    mainTableSudoku.rows[indX].cells[indY].textContent = currentSudokuTable.inProcessSudokuGrid[indX][indY];
+                }
+            }
+        }
+    }
+    // adauga un if sa vad daca indX si indY sunt mai mici de 10    
 }
 sudokuCompletion();
 
