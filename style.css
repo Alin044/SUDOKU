@@ -200,3 +200,10 @@ body{
     transform: scale(1.1);
     background-color: rgba(255, 255, 255, 0.733);
 }
+
+#mistakesContainer{
+    position: absolute;
+    bottom: 20.6%;
+    color: white;
+    font-family: Roboto, Arial;
+}
