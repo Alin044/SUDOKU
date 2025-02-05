@@ -370,6 +370,9 @@ function sudokuCompletion(event) {
             if (validateNumber(numberClicked)) {
                 currentSudokuTable.inProcessSudokuGrid[indX][indY] = numberClicked + 1;
                 mainTableSudoku.rows[indX].cells[indY].textContent = numberClicked + 1;
+                mainTableSudoku.rows[indX].cells[indY].style.color = '#a1deff';
+                mainTableSudoku.rows[indX].cells[indY].style.fontWeight = '900';
+                mainTableSudoku.rows[indX].cells[indY].style.fontSize = '20px';
                 console.log("Number entered successfully");
             } else {
                 console.log("Invalid move!");
@@ -487,20 +490,39 @@ function getCellPressed() {
         if (event.target.tagName === 'TD') {
             currentCell = [event.target.parentElement.rowIndex, event.target.cellIndex];
             console.log("Selected cell:", currentCell);
-            for(let i = 0; i < 9; i++){
-                for(let j = 0; j < 9; j++){
-                    mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
-                }
-            }
-            for(let i = 0; i < 9; i++){
-                mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff65";            
-                mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff65";
-            }
-            mainTableSudoku.rows[currentCell[0]].cells[currentCell[1]].style.backgroundColor = "#93e0ffa9";
+            // for(let i = 0; i < 9; i++){
+            //     for(let j = 0; j < 9; j++){
+            //         mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
+            //     }
+            // }
+            // for(let i = 0; i < 9; i++){
+            //     mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff65";            
+            //     mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff65";
+            // }
+            // mainTableSudoku.rows[currentCell[0]].cells[currentCell[1]].style.backgroundColor = "#93e0ffa9";
         }
     });
 }
 
+function highlightNumbers(index){
+    let indX = index[0];
+    let indY = index[1];
+
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+            mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
+        }
+    }
+    for(let i = 0; i < 9; i++){
+        mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff39";            
+        mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff39";
+    }
+    for(let i = 0; i < 9; i++){
+        for(let j = 0; j < 9; j++){
+            if(currenSu)
+        }
+    }
+}
 // function getCellPressed(){
 //     mainTableSudoku.addEventListener("click", function(event){
 //         if(event.target.tagName === 'TD'){
