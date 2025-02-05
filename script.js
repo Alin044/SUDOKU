@@ -9,6 +9,20 @@ const numPadArray = Array.from(numPadBtn);
 let index = 0;
 let currentCell = [10, 10];
 
+//=================Things to adjust in the script ==================
+//1. make the game save eaven after refresh  -------------Top priority
+//2. when i hover over hightlighted cells that are already highlighted to not take the style when i mouseup
+//3. add a pause option
+//4. add a new game option
+//5. add a restart game option
+//5. update the mistakes when they happen
+//6. change the style of a button when the number is fully placed
+//7. add a go back one step function
+//8. erase
+//9. pencil
+//10. add a hint option 
+
+
 let completeTable = new Array(9).fill(null).map(() => Array(9).fill(0));    
 
 newGameOptions.style.visibility = 'hidden';
