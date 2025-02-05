@@ -226,23 +226,6 @@ function eliminateCells(levelType){
     console.log(currentSudokuTable.gridToSolve);
 }
 
-// function eliminateCells(levelType){
-//     let temp = levelGame.levelCellsToRemove[levelType][1] - levelGame.levelCellsToRemove[levelType][0];
-//     let cellsToRemove = Math.floor(Math.random() * temp) + levelGame.levelCellsToRemove[levelType][0];
-//     for(let i = 0; i < cellsToRemove; i++){
-//         let attempts = 0;
-//         do{
-//             let randomX = Math.floor(Math.random() * 9);
-//             let randomY = Math.floor(Math.random() * 9);
-//             attempts++;
-//             if(currentSudokuTable.gridToSolve[randomX][randomY] !== 0){
-//                 currentSudokuTable.gridToSolve[randomX][randomY] = 0;
-//                 attempts = 100;
-//             }
-//         }while(attempts < 100);
-//     }
-//     console.log(currentSudokuTable.gridToSolve);
-// }
 
 eliminateCells(0);  
 currentSudokuTable.inProcessSudokuGrid = currentSudokuTable.gridToSolve;
