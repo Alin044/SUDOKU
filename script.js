@@ -462,12 +462,20 @@ function cronometer(){
         let tempSec = currentSudokuTable.startTime % 60;
         if(tempMin < 10 && tempSec < 10){
             timerBox.textContent = `0${tempMin}:0${tempSec}`;
-        }else if(tempMin > 10 && tempSec > 10){
+        }else if(tempMin > 10 && tempMin < 60 && tempSec > 10){
             timerBox.textContent = `${tempMin}:${tempSec}`;
-        }else if(tempMin > 10 && tempSec < 10){
+        }else if(tempMin > 10 && tempMin < 60 && tempSec < 10){
             timerBox.textContent = `${tempMin}:0${tempSec}`;
         }else if(tempMin < 10 && tempSec > 10){
             timerBox.textContent = `0${tempMin}:${tempSec}`;
+        }else if(tempMin >= 60 && tempMin % 60 < 10 &&  tempSec < 10){
+            timerBox.textContent = `${Math.floor(tempMin / 60)}:0${tempMin % 60}:0${tempSec}`;
+        }else if(tempMin >= 60 && tempMin % 60 > 10 && tempSec < 10){
+            timerBox.textContent = `${Math.floor(tempMin / 60)}:${tempMin % 60}:0${tempSec}`;
+        }else if(tempMin >= 60 && tempMin % 60 < 10 && tempSec > 10){
+            timerBox.textContent = `${Math.floor(tempMin / 60)}:0${tempMin % 60}:${tempSec}`;
+        }else if(tempMin >= 60 && tempMin % 60 > 10 && tempSec > 10){
+            timerBox.textContent = `${Math.floor(tempMin / 60)}:${tempMin % 60}:${tempSec}`;
         }
     }, 1000);
 }
