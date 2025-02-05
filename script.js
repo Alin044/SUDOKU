@@ -231,7 +231,7 @@ function eliminateCells(levelType){
 // }
 
 eliminateCells(0);  
-
+currentSudokuTable.inProcessSudokuGrid = currentSudokuTable.gridToSolve;
 
 
 function displayGridToSolve(){
@@ -490,6 +490,7 @@ function getCellPressed() {
         if (event.target.tagName === 'TD') {
             currentCell = [event.target.parentElement.rowIndex, event.target.cellIndex];
             console.log("Selected cell:", currentCell);
+            highlightNumbers(currentCell);
             // for(let i = 0; i < 9; i++){
             //     for(let j = 0; j < 9; j++){
             //         mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
@@ -507,22 +508,28 @@ function getCellPressed() {
 function highlightNumbers(index){
     let indX = index[0];
     let indY = index[1];
-
+    let num = currentSudokuTable.inProcessSudokuGrid[indX][indY];
     for(let i = 0; i < 9; i++){
         for(let j = 0; j < 9; j++){
             mainTableSudoku.rows[i].cells[j].style.backgroundColor = "transparent";
         }
     }
     for(let i = 0; i < 9; i++){
-        mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff39";            
-        mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff39";
+        mainTableSudoku.rows[i].cells[currentCell[1]].style.backgroundColor = "#ffffff20";            
+        mainTableSudoku.rows[currentCell[0]].cells[i].style.backgroundColor = "#ffffff20";
     }
-    for(let i = 0; i < 9; i++){
-        for(let j = 0; j < 9; j++){
-            if(currenSu)
+    if(num !== 0){
+        for(let i = 0; i < 9; i++){
+            for(let j = 0; j < 9; j++){
+                if(currentSudokuTable.inProcessSudokuGrid[i][j] == num){
+                    mainTableSudoku.rows[i].cells[j].style.backgroundColor = "#cacaca70";
+                }
+            }
         }
     }
+    mainTableSudoku.rows[indX].cells[indY].style.backgroundColor = "#bce5ff56";
 }
+
 // function getCellPressed(){
 //     mainTableSudoku.addEventListener("click", function(event){
 //         if(event.target.tagName === 'TD'){
